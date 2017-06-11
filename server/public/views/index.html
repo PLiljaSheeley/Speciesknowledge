@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html ng-app="DiskoApp">
+
+<head lang="en">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href = "stylesheets/bootstrap.min.css" rel = "stylesheet">
+  <link href = "stylesheets/index.css" rel = "stylesheet">
+  <link rel="stylesheet" href="vendor/angular-ui-bootstrap/dist/ui-bootstrap-csp.css" />
+  <link rel="stylesheet" href="vendor/carrotsearch/carrotsearch.foamtree.util.loading.css" />
+  <!-- <link rel="stylesheet" href="vendor/carrotsearch/demos/assets/css/common.css" /> -->
+  <link rel="stylesheet" href="vendor/carrotsearch/demos/assets/css/tooltip.css" />
+  <script src="vendor/jquery/dist/jquery.min.js"></script>
+  <script src="vendor/bootstrap/bootstrap.min.js"></script>
+  <script src="vendor/carrotsearch/carrotsearch.foamtree.js"></script>
+  <script src="vendor/carrotsearch/carrotsearch.foamtree.asserts.js"></script>
+  <script src="vendor/carrotsearch/carrotsearch.foamtree.util.loading.js"></script>
+  <script src="vendor/carrotsearch/demos/assets/js/typeahead.js"></script>
+  <script src="vendor/angular/angular.min.js" type="text/javascript"></script>
+  <script src="vendor/validator/validator.min2.js"></script>
+  <script src="vendor/angular-smart-table/angular-smart-table.js"></script>
+  <script src="vendor/hammer/hammer.min.js"></script>
+  <script src="vendor/angular/angular-sticky.js"></script>
+  <script src="vendor/tooltip/tooltip.min.js"></script>
+  <script src="vendor/angular-ui-bootstrap/dist/ui-bootstrap.js"></script>
+  <script src="vendor/angular-ui-bootstrap/dist/ui-bootstrap-tpls.js"></script>
+  <script src="vendor/angular/angular-animate.min.js"></script>
+  <script src="assets/scripts/client.js" type="text/javascript"></script>
+  <meta property="og:url"                content="NEED WEBSITE NAME"/>
+  <meta property="og:type"               content="website" />
+  <meta property="og:title"              content="Demographic Index of Species Knowledge" />
+  <meta property="og:description"        content="How much do we really know about other species on our planet?" />
+  <meta property="og:image"/>
+  <!-- <script src="assets/scripts/client.min.js" type="text/javascript"></script> -->
+ <title>Knowledge by Species</title>
+</head>
+
+<body>
+
+  <div class="container view-container" ng-controller="MapController as map">
+    <div class="map col-md-9" >
+      <div class="breadcrumb-trail" sticky sticky-top="0" sticky-media="(min-width:640px)">
+          <a href="" class="active" ng-click="map.zoomToGroup(map.foamtree.get('dataObject'))">Tetrapoda</a>
+          <a class="inactive" ng-if="!map.crumbs.class">Class</a>
+          <a class="active" href="" ng-if="map.crumbs.class" ng-click="map.zoomToGroup(map.crumbs.class)">{{map.crumbs.class.label}}</a>
+
+          <a class="inactive" ng-if="!map.crumbs.order">Order</a>
+          <a class="active" href="" ng-if="map.crumbs.order" ng-click="map.zoomToGroup(map.crumbs.order)">{{map.crumbs.order.label}}</a>
+
+          <a class="inactive" ng-if="!map.crumbs.family">Family</a>
+          <a class="active" href="" ng-if="map.crumbs.family" ng-click="map.zoomToGroup(map.crumbs.family)">{{map.crumbs.family.label}}</a>
+
+          <a class="inactive" ng-if="!map.crumbs.genus"> Genus</a>
+          <a class="active" href="" ng-if="map.crumbs.genus" ng-click="map.zoomToGroup(map.crumbs.genus)">{{map.crumbs.genus.label}}</a>
+
+          <a class="inactive" ng-if="!map.crumbs.species">Species</a>
+          <a class="active" href="" ng-if="map.crumbs.species" ng-click="map.zoomToGroup(map.crumbs.species)">{{map.crumbs.species.label}}</a>
+      </div>
+      <div id="visualization" style="height: 800px;"></div>
+
+    </div>
+
+
+    <div class="navbar-right col-xs-12 col-md-3">
+
+      <div class="search search-bar" sticky sticky-top="0" sticky-media="(min-width:100px)">
+        <form class="form-group">
+          <div class="input-group">
+            <input name="query" ng-model="map.search" class="form-control"  placeholder="Search for a group or species..." id="searchBox"/>
+            <span class="input-group-btn">
+              <button class="btn btn-default btn-nomargin" ng-click="map.form()">GO!</button>
+            </span>
+          </div>
+        </form>
+      </div>
+
+      <div class="sidebar-wrapper" ng-controller="SidebarController as sidebar">
+      <h3>KEY:</h3>
+      <div class="well keyContainer">
+        <div class="mapKey">
+          <div class="title-y">
+            <h5>Knowledge of Mortality</h5>
+            <p>Displayed as Survival Index</p>
+          </div>
+          <table>
+            <tr>
+              <td class="axis-y">4: High</td>
+              <td class="keyGrid"></td>
+              <td class="keyGrid"></td>
+              <td class="keyGrid"></td>
+              <td class="keyGrid grid-4" ng-class="sidebar.key.colors['4']" ng-click="sidebar.key.select('4')"></td>
+            </tr>
+            <tr>
+              <td class="axis-y">3: Fair</td>
+              <td class="keyGrid grid-31" ng-class="sidebar.key.colors['31']" ng-click="sidebar.key.select('31')"></td>
+              <td class="keyGrid grid-32" ng-class="sidebar.key.colors['32']" ng-click="sidebar.key.select('32')"></td>
+              <td class="keyGrid grid-33" ng-class="sidebar.key.colors['33']" ng-click="sidebar.key.select('33')"></td>
+              <td class="keyGrid"></td>
+            </tr>
+            <tr>
+              <td class="axis-y">2: Low</td>
+              <td class="keyGrid grid-21" ng-class="sidebar.key.colors['21']" ng-click="sidebar.key.select('21')"></td>
+              <td class="keyGrid grid-22" ng-class="sidebar.key.colors['22']" ng-click="sidebar.key.select('22')"></td>
+              <td class="keyGrid grid-23" ng-class="sidebar.key.colors['23']" ng-click="sidebar.key.select('23')"></td>
+              <td class="keyGrid"></td>
+            </tr>
+            <tr>
+              <td class="axis-y">1: None</td>
+              <td class="keyGrid grid-11" ng-class="sidebar.key.colors['11']" ng-click="sidebar.key.select('11')"></td>
+              <td class="keyGrid grid-12" ng-class="sidebar.key.colors['12']" ng-click="sidebar.key.select('12')"></td>
+              <td class="keyGrid grid-13" ng-class="sidebar.key.colors['13']" ng-click="sidebar.key.select('13')"></td>
+              <td class="keyGrid"></td>
+            </tr>
+            <tr>
+              <td></td>
+              <td>1:<br />None</td>
+              <td>2:<br />Low</td>
+              <td>3:<br />Fair</td>
+              <td>4:<br />High</td>
+            </tr>
+          </table>
+          <div class="title-x">
+            <h5>Knowledge of Fertility</h5>
+            <p>Displayed as Fertility Index</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Pulled from foamtree large dataset html. There is more there to pull over and connect. -->
+
+
+
+
+      <!-- <p>Current level: (level) Selected (level): (level.type)</p> -->
+      <div class="species-data" ng-show="sidebar.species.show">
+        <div class="vernacular-name">
+          <p class="vernacular-name"><span class="nameLabel">Common name:</span><br />
+            {{sidebar.species.name}}</p>
+          </div>
+
+          <div class="picture">
+            <div class="img-container">
+              <img class="img-load" src="images/spinner-load.svg" ng-show="sidebar.species.loading">
+              <!-- <img ng-show="sidebar.species.picture === 'images/no-image-available.jpg'" ng-src="{{sidebar.species.picture}}" imageonload="sidebar.species.loading = false"> -->
+              <img ng-src="{{sidebar.species.picture}}" imageonload="sidebar.species.loading = false" ng-click="sidebar.cycle = 0" data-toggle="modal" data-target="#pictureModal">
+              <!-- ng-show="!sidebar.species.loading"> -->
+            </div>
+          </div>
+
+          <button type="button" class="btn btn-warning btn-lg" data-toggle="modal" data-target="#mySpeciesModal">See data for <span style="font-style: italic;">{{sidebar.mapGroup.label}}</span></button>
+
+
+          <div id="mySpeciesModal" class="modal fade" role="dialog" >
+            <div class="modal-dialog">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <button type="button" class="close" data-dismiss="modal">&times;</button>
+                  <h4 class="modal-title">Data sets for {{sidebar.mapGroup.label}}</h4>
+                </div>
+                <div class="modal-body">
+                  <table st-safe-src="sidebar.genus.data[sidebar.mapGroup.label]" st-table="sidebar.displayedData" class="table table-striped">
+
+                    <thead>
+                      <tr>
+                        <th st-sort="sourcedb">Source Database</th>
+                        <th st-sort="varname">Variable Name</th>
+                        <th st-sort="varval">Variable Value</th>
+                      </tr>
+                      <tr>
+                        <th colspan="3">
+                          <input st-search placeholder="Search" class="input-sm form-control" type="search" st-reset-search/>
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr ng-repeat="data in sidebar.displayedData track by $index">
+                        <td>{{data.sourcedb}}</td>
+                        <td>{{data.varname}}</td>
+                        <td>{{data.varval}}</td>
+                      </tr>
+                    </tbody>
+                    <tfoot>
+                      <tr>
+                        <td colspan="3" class="text-center">
+                          <div st-pagination="" st-items-by-page="10"></div>
+                        </td>
+                      </tr>
+                    </tfoot>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        <div id="pictureModal" class="picture-modal modal fade" role="dialog">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="image-cover">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <div class="nav-buttons" ng-show="sidebar.species.pictureList.length > 1">
+                  <span class="glyphicon glyphicon-menu-right float-right" ng-click="sidebar.modal(1)"></span>
+                  <span class="glyphicon glyphicon-menu-left float-left" ng-click="sidebar.modal(-1)"></span>
+                </div>
+              </div>
+              <div class="image-cover loading" ng-show="sidebar.modal.loading">
+                <img src="images/spinner-load.svg">
+              </div>
+              <img ng-src="{{sidebar.species.pictureList.length ? sidebar.species.pictureList[sidebar.cycle].identifier : 'images/no-image-available.jpg'}}" imageonload="sidebar.modal.loading = false">
+
+            </div>
+            <div class="modal-footer">
+              <p>Image source:<span style="font-style: italic; color: #707070;">  {{sidebar.species.pictureList[sidebar.cycle].publisher}}</span></p>
+            </div>
+          </div>
+        </div>
+
+
+      </div>
+
+      <div class="well sharePage">
+        <h4>
+          Share the tree map to further scientific discovery!
+        </h4>
+
+        <a href="https://twitter.com/share" class="twitter-share-button" data-text="How much does humanity actually know about the species we share this planet with?" data-hashtags="biodiversity" data-dnt="true">Tweet</a>
+        <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
+
+       <a href="//www.reddit.com/submit" onclick="window.location = '//www.reddit.com/submit?url=' + encodeURIComponent(window.location); return false"> <input type="image" class="reddit" src="//www.redditstatic.com/spreddit10.gif" alt="submit to reddit" border="0" /></a>
+       <div class="facebook" ng-controller ="ShareController as share">
+         <br />
+       <div id="fb-root"></div>
+       <div class="fb-share-button" data-href="$location.absUrl()" data-layout="button_count" data-mobile-iframe="false"></div>
+       </div>
+       <button type="button" ng-show="sidebar.mapGroup.groupLevel" ng-click="sidebar.share()" class="share" data-toggle="modal" data-target="#shareModal">Share this group</button>
+
+       <div id="shareModal" class="modal-share modal rotate" role="dialog">
+         <div class="modal-dialog">
+           <div class="modal-content">
+             <div class="modal-header">
+               <button type="button" class="close" data-dismiss="modal">&times;</button>
+               <h4 class="modal-title">Copy the link to share!</h4>
+             </div>
+             <div class="modal-body">
+               <h5>{{sidebar.link}}</h5>
+             </div>
+
+           </div>
+         </div>
+     </div>
+     </div>
+       <div ng-controller="DownloadController as down" class="downloadModal">
+    <button type="button" class="btn-nomargin btn-warning btn-lg" data-toggle="modal" data-target="#myModal">Request Dataset</button>
+    <div id="myModal" class="modal fade" role="dialog">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
+            <h4 class="modal-title">Enter your information to request the dataset</h4>
+          </div>
+          <div class="modal-body">
+            <div ng-hide="down.submitted">
+              <form role="form" data-toggle="validator">
+
+                <div class="form-group">
+                  <label for="inputFirstName" class="control-label">First Name</label>
+                  <input type="text" class="form-control" ng-model="down.downloadObject.first_name" placeholder="First Name" id="inputFirstName" required autofocus/><br />
+                  <div class="help-block with-errors"></div>
+                </div>
+                <div class="form-group">
+                  <label for="inputLastName" class="control-label">Last Name</label>
+                  <input type="text" class="form-control" ng-model="down.downloadObject.last_name" placeholder="Last Name" id="inputLastName" required/><br />
+                  <div class="help-block with-errors"></div>
+                </div>
+                <div class="form-group">
+                  <label for="inputEmail" class="control-label">Email</label>
+                  <input type="email" class="form-control" ng-model="down.downloadObject.email" placeholder="Email" data-error="Enter a valid email." id="inputEmail" required/><br />
+                  <div class="help-block with-errors"></div>
+                </div>
+                <div class="form-group">
+                  <label for="inputInstitution" class="control-label">Institution</label>
+                  <input type="text" class="form-control" ng-model="down.downloadObject.institution" placeholder="Institution" id="inputInstitution"/><br />
+                </div>
+                <div class="form-group">
+                  <button type="submit" class="btn btn-primary" ng-click="down.storeDownloadInfo(down.downloadObject)">Request Data Download</button>
+                </div>
+
+              </form>
+            </div>
+            <div ng-show="down.submitted">
+              <h3>
+                Thank you. A link for the download has been sent to {{down.downloadObject.email}}
+              </h3>
+              <button class="btn btn-primary" data-dismiss="modal">OK</button>
+
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div> <!--download controller end -->
+
+
+      </div>
+    </div> <!-- end of right nav bar -->
+  </div> <!-- container end-->
+  <div class="clearfix"></div>
+
+</body>
+</html>
