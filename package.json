@@ -1,7 +1,7 @@
 {
   "name": "disko",
   "version": "0.5.0",
-  "main": "server.js",
+  "main": "index.js",
   "dependencies": {
     "adm-zip": "^0.4.7",
     "angular": "^1.5.5",
