@@ -5,7 +5,7 @@ var path = require('path');
 
 
 ////////// import routes /////////////
-var download = require('./download');
+// var download = require('./download');
 var mapData = require('./mapdata');
 var getData = require('./getdata');
 var speciesDetail = require('./speciesdetail');
