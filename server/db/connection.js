@@ -4,7 +4,7 @@ pg.defaults.ssl = true;
 pg.connect(process.env.DATABASE_URL, function(err, client) {
   if (err) throw err;
   console.log('Connected to postgres! Getting schemas...');
-
+});
 function initializeDB(){
   return new Promise(function(resolve, reject) {
   pg.connect(connectionString, function(err, client, done){
