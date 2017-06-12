@@ -17,7 +17,7 @@ router.get('/', function(request, response) {
 });
 
 router.use('/mapdata', mapData);
-router.use('/add', download);
+// router.use('/add', download);
 router.use('/getdata', getData);
 router.use('/speciesdetail', speciesDetail);
 
