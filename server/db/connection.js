@@ -1,10 +1,15 @@
 var pg = require('pg');
 
-pg.defaults.ssl = true;
-var connectionString = process.env.DATABASE_URL;
-pg.connect(connectionString, function(err, client) {
-  console.log('Connected to postgres! Getting schemas...');
-});
+var connectionString;
+
+if (process.env.DATABASE_URL){
+  pg.defaults.ssl = true;
+  console.log('environment var');
+  connectionString = process.env.DATABASE_URL;
+}//else {
+//   console.log('local var');
+//   connectionString = "postgres://localhost:5432/disko";
+// }
 
 function initializeDB(){
   return new Promise(function(resolve, reject) {

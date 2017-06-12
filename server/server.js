@@ -5,8 +5,8 @@ var app = express();
 var port = process.env.PORT || 3000;
 
 ////////////import modules//////////
-var index = require('./routes/index');
 var initializeDB = require('./db/connection').initializeDB;
+var index = require('./routes/index');
 
 //////////// config /////////////
 app.use(express.static('server/public'));
