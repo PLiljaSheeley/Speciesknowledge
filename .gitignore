@@ -1,6 +1,5 @@
 .DS_Store
-diskoraw.csv
-files/zip/_MACOSX
-files/zip/
+files
 client.min.js
-files/species_details.csv
+node_modules
+
